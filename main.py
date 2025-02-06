@@ -77,9 +77,7 @@ class App:
         self.screen_u = ur - ul
         self.screen_h = dr - dl
 
-    def cal_camera_pos(
-        self, h_angle: float, v_angle: float, d: float
-    ) -> np.array[int, int, int]:
+    def cal_camera_pos(self, h_angle: float, v_angle: float, d: float) -> np.array:
         """
         カメラ視点の球座標を世界座標系に変換する
         """
@@ -88,13 +86,17 @@ class App:
         z = int(d * np.cos(self.camera_v_angle + v_angle))
         return np.array([x, y, z])
 
-    def cal_pos_from_camera(
-        self, pos: np.array[int, int, int]
-    ) -> np.array[int, int, int]:
+    def cal_pos_from_camera(self, pos: np.array) -> np.array:
         """
         世界座標系をカメラからのベクトルに変換する
         """
         return pos - self.camera_pos
+
+    def cal_pos_on_screen(self, pos: np.array) -> tuple[int, int]:
+        """
+        世界座標系をスクリーン上のベクトルに変換する
+        """
+        pass
 
     def update(self):
         pass
