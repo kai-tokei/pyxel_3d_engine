@@ -1,5 +1,6 @@
 import pyxel
 import numpy as np
+import math
 
 
 class App:
@@ -59,11 +60,18 @@ class App:
 
         pyxel.run(self.update, self.draw)
 
-    def change_camera_angle(self, velocity: float) -> tuple[float, float]:
+    def cal_camera_angle(self, velocity: float) -> tuple[float, float]:
         """
         描画スクリーン上のマウスの位置からカメラの角度を割り出す
         velocity: 角度変更強度
         """
+        mid_w = self.screen_w // 2
+        mid_h = self.screen_h // 2
+        diff_w = mid_w - pyxel.mouse_x
+        diff_h = mid_h - pyxel.mouse_y
+        u_angle = (mid_w / diff_w) * (math.pi / 2) * velocity
+        h_angle = (mid_h / diff_h) * (math.pi / 2) * velocity
+        return u_angle, h_angle
 
     def update(self):
         pass
