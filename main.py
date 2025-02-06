@@ -18,10 +18,11 @@ class Camera:
         self.screen_d = screen_d
         self.screen_w = screen_w
         self.screen_h = screen_h
+        self.z_prime_handler = 4
 
     def cal_pos_on_screen(self, pos: np.array) -> tuple[int, int, int] | None:
         """
-        3Dの世界座標をカメラ視点のスクリーン座標に変換する。
+        三次元の世界座標をカメラ視点のスクリーン座標に変換する。
         """
         # カメラ座標系への変換
         relative_pos = pos - self.camera_pos
@@ -44,7 +45,7 @@ class Camera:
         y_prime = cos_v * y - sin_v * z_prime
         z_prime = sin_v * y + cos_v * z_prime
 
-        z_prime /= 4
+        z_prime /= self.z_prime_handler
 
         # 透視投影
         if z_prime <= 0.0001:
@@ -94,21 +95,18 @@ class App:
                 0,
                 self.move_velo * np.cos(self.camera.camera_h_angle),
             )
-        # if pyxel.btn(pyxel.KEY_A):
-        #     self.camera.move(-self.move_velo, 0, 0)
         if pyxel.btn(pyxel.KEY_S):
             self.camera.move(
                 -self.move_velo * np.sin(self.camera.camera_h_angle),
                 0,
                 -self.move_velo * np.cos(self.camera.camera_h_angle),
             )
-        # if pyxel.btn(pyxel.KEY_D):
-        #     self.camera.move(self.move_velo, 0, 0)
         if pyxel.btn(pyxel.KEY_K):
             self.camera.move(0, -self.move_velo, 0)
         if pyxel.btn(pyxel.KEY_J):
             self.camera.move(0, self.move_velo, 0)
 
+        # 角度調整
         v = 360
         if pyxel.btn(pyxel.KEY_LEFT):
             self.camera.rotate(-np.pi / v, 0)
@@ -119,10 +117,20 @@ class App:
         if pyxel.btn(pyxel.KEY_DOWN):
             self.camera.rotate(0, np.pi / v)
 
+        # カメラの視野を調整
+        if pyxel.btn(pyxel.KEY_Z):
+            self.camera.z_prime_handler += 0.01
+        if pyxel.btn(pyxel.KEY_X):
+            self.camera.z_prime_handler -= 0.01
+
     def draw_debug(self):
+        """
+        デバッグ情報を出力
+        """
         pyxel.text(0, 0, "camera_pos: " + str(self.camera.camera_pos), 7)
         pyxel.text(0, 8, "h_angle: " + str(np.rad2deg(self.camera.camera_h_angle)), 7)
         pyxel.text(0, 16, "w_angle: " + str(np.rad2deg(self.camera.camera_v_angle)), 7)
+        pyxel.text(0, 24, "z_prime: " + str(self.camera.z_prime_handler), 7)
 
     def draw(self):
         pyxel.cls(0)
@@ -133,7 +141,7 @@ class App:
                 if pos != None:
                     px, py, pd = pos
                     pyxel.pset(px, py, (8 if ((x + z) % d == 0) else 7))
-                    # pyxel.circ(x, y, 1, 7)
+        self.draw_debug()
 
 
 App()
