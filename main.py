@@ -1,4 +1,5 @@
 import pyxel
+import numpy as np
 
 
 class App:
@@ -30,8 +31,8 @@ class App:
 
         """
         スクリーンのパラメータ
-        screen_d: カメラからのユークリッド距離
-        screen_x: 空間上のスクリーンの左上のx座標
+        screen_d: カtupleメラからのユークリッド距離
+        screen_x: 空tuple間上のスクリーンの左上のx座標
         screen_y: 空間上のスクリーンの左上のy座標
         screen_z: 空間上のスクリーンの左上のz座標
         screen_w: スクリーンの横幅
@@ -45,8 +46,8 @@ class App:
         self.screen_z: int
         self.screen_w: int = 160
         self.screen_h: int = 120
-        self.screen_u: tuple[float, float, float]
-        self.screen_v: tuple[float, float, float]
+        self.screen_u: np.array[float, float, float]
+        self.screen_v: np.array[float, float, float]
 
         pyxel.run(self.update, self.draw)
 
@@ -55,3 +56,6 @@ class App:
 
     def draw(self):
         pass
+
+
+App()
