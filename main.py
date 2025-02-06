@@ -24,10 +24,23 @@ class App:
         self.camera_h_angle: float
         self.camera_v_angle: float
 
-        # スクリーンのパラメータ
+        """
+        スクリーンのパラメータ
+        screen_x: 空間上のスクリーンの左上のx座標
+        screen_y: 空間上のスクリーンの左上のy座標
+        screen_z: 空間上のスクリーンの左上のz座標
+        screen_w: スクリーンの横幅
+        screen_h: スクリーンの縦幅
+        screen_u: スクリーンの横ベクトル
+        screen_v: スクリーンの縦ベクトル
+        """
         self.screen_x: int
         self.screen_y: int
         self.screen_z: int
+        self.screen_w: int = 160
+        self.screen_h: int = 120
+        self.screen_u: tuple[float, float, float]
+        self.screen_v: tuple[float, float, float]
 
         pyxel.run(self.update, self.draw)
 
