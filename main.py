@@ -117,7 +117,7 @@ class App:
         if pyxel.btn(pyxel.KEY_DOWN):
             self.camera.rotate(0, np.pi / v)
 
-        # カメラの視野を調整
+        # 奥行スケールを調整
         if pyxel.btn(pyxel.KEY_Z):
             self.camera.z_prime_handler += 0.01
         if pyxel.btn(pyxel.KEY_X):
