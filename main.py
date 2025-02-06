@@ -5,6 +5,7 @@ import numpy as np
 class App:
     def __init__(self):
         pyxel.init(160, 120, "3D Test", fps=60)
+        pyxel.mouse(visible=True)
 
         """
         座標は左手系に従う(z軸が奥にむかって正)
@@ -58,11 +59,17 @@ class App:
 
         pyxel.run(self.update, self.draw)
 
+    def change_camera_angle(self, velocity: float) -> tuple[float, float]:
+        """
+        描画スクリーン上のマウスの位置からカメラの角度を割り出す
+        velocity: 角度変更強度
+        """
+
     def update(self):
         pass
 
     def draw(self):
-        pass
+        pyxel.cls(0)
 
 
 App()
