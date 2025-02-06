@@ -70,7 +70,7 @@ class App:
         """
         スクリーンの座標を計算する
         """
-        return self.cal_camera_pos(0, 0, self.screen_d)
+        return self.cal_camera_pos(-self.aov_w, self.aov_h, self.screen_d)
 
     def cal_camera_pos(
         self, h_angle: float, v_angle: float, d: float
