@@ -19,17 +19,13 @@ class App:
 
         """
         カメラのパラメータ
-        camera_x: カメラのx座標
-        camera_y: カメラのy座標
-        camera_z: カメラのz座標
+        camera_pos: カメラの座標
         camera_h_angle: 水平方向の角度(-pi/2 ~ pi/2)。0でz軸方向を向く。+pi/2で、x軸と同じ向き
         camera_v_angle: 垂直方向の角度(-pi/2 ~ pi/2)。0でz軸方向を向く。+pi/2で、y軸と同じ向き
         aov_h: 水平画角(スクリーンの大きさから計算する)
         aov_w: 垂直画角(スクリーンの大きさから計算する)
         """
-        self.camera_x: int
-        self.camera_y: int
-        self.camera_z: int
+        self.camera_pos: np.array[int, int, int] = np.array([0, 0, 0])
         self.camera_h: int
         self.camera_h_angle: float
         self.camera_v_angle: float
@@ -41,18 +37,15 @@ class App:
         """
         スクリーンのパラメータ
         screen_d: カtupleメラからのユークリッド距離
-        screen_x: 空tuple間上のスクリーンの左上のx座標
-        screen_y: 空間上のスクリーンの左上のy座標
-        screen_z: 空間上のスクリーンの左上のz座標
+        screen_pos: 空間上のスクリーンの左上の座標
         screen_w: スクリーンの横幅
         screen_h: スクリーンの縦幅
         screen_u: スクリーンの横ベクトル
         screen_v: スクリーンの縦ベクトル
+        u, vの二つのベクトルでスクリーンを張る
         """
         self.screen_d: float
-        self.screen_x: int
-        self.screen_y: int
-        self.screen_z: int
+        self.screen_pos: np.array[int, int, int]
         self.screen_w: int = 160
         self.screen_h: int = 120
         self.screen_u: np.array[float, float, float]
@@ -73,20 +66,28 @@ class App:
         h_angle = (mid_h / diff_h) * (math.pi / 2) * velocity
         return u_angle, h_angle
 
-    def cal_screen_pos(self) -> tuple[float, float, float]:
+    def cal_screen_pos(self) -> np.array[int, int, int]:
         """
         スクリーンの座標を計算する
         """
         return self.cal_camera_pos(0, 0, self.screen_d)
 
-    def cal_camera_pos(self, h_angle: float, v_angle: float, d: float):
+    def cal_camera_pos(
+        self, h_angle: float, v_angle: float, d: float
+    ) -> np.array[int, int, int]:
         """
-        カメラ視点の曲座標系を世界座標系に変換する
+        カメラ視点の球座標を世界座標系に変換する
         """
-        x = d * np.sin(self.camera_v_angle + v_angle)
-        y = d * np.sin(self.camera_h_angle + h_angle)
-        z = d * np.cos(self.camera_v_angle + v_angle)
-        return x, y, z
+        x = int(d * np.sin(self.camera_v_angle + v_angle))
+        y = int(d * np.sin(self.camera_h_angle + h_angle))
+        z = int(d * np.cos(self.camera_v_angle + v_angle))
+        return np.array([x, y, z])
+
+    def cal_pos_from_camera(self, pos: np.array[int, int, int]):
+        """
+        世界座標系をカメラからの球座標系に変換する
+        """
+        d = pos - self.camera_pos
 
     def update(self):
         pass
