@@ -11,6 +11,11 @@ class App:
         """
 
         """
+        今回実装するのは、フィールド上の座標を
+        カメラからスクリーン上の座標に変換する処理
+        """
+
+        """
         カメラのパラメータ
         camera_x: カメラのx座標
         camera_y: カメラのy座標
@@ -28,6 +33,8 @@ class App:
         self.camera_v_angle: float
         self.aov_h: float
         self.aov_w: float
+        self.dh_angle: float
+        self.hw_angle: float
 
         """
         スクリーンのパラメータ
