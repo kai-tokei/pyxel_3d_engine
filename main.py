@@ -77,9 +77,15 @@ class App:
         """
         スクリーンの座標を計算する
         """
-        x = self.screen_d * np.sin(self.camera_v_angle)
-        y = self.screen_d * np.sin(self.camera_h_angle)
-        z = self.screen_d * np.cos(self.camera_v_angle)
+        return self.cal_camera_pos(0, 0, self.screen_d)
+
+    def cal_camera_pos(self, h_angle: float, v_angle: float, d: float):
+        """
+        カメラ視点の曲座標系を世界座標系に変換する
+        """
+        x = d * np.sin(self.camera_v_angle + v_angle)
+        y = d * np.sin(self.camera_h_angle + h_angle)
+        z = d * np.cos(self.camera_v_angle + v_angle)
         return x, y, z
 
     def update(self):
