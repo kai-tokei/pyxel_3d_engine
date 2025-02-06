@@ -66,11 +66,16 @@ class App:
         h_angle = (mid_h / diff_h) * (math.pi / 2) * velocity
         return u_angle, h_angle
 
-    def cal_screen_pos(self) -> np.array[int, int, int]:
+    def cal_screen_pos(self) -> None:
         """
         スクリーンの座標を計算する
         """
-        return self.cal_camera_pos(-self.aov_w, self.aov_h, self.screen_d)
+        ul = self.cal_camera_pos(-self.aov_w, self.aov_h, self.screen_d)
+        ur = self.cal_camera_pos(self.aov_w, self.aov_h, self.screen_d)
+        dl = self.cal_camera_pos(-self.aov_w, -self.aov_h, self.screen_d)
+        dr = self.cal_camera_pos(self.aov_w, -self.aov_h, self.screen_d)
+        self.screen_u = ur - ul
+        self.screen_h = dr - dl
 
     def cal_camera_pos(
         self, h_angle: float, v_angle: float, d: float
@@ -83,11 +88,13 @@ class App:
         z = int(d * np.cos(self.camera_v_angle + v_angle))
         return np.array([x, y, z])
 
-    def cal_pos_from_camera(self, pos: np.array[int, int, int]):
+    def cal_pos_from_camera(
+        self, pos: np.array[int, int, int]
+    ) -> np.array[int, int, int]:
         """
-        世界座標系をカメラからの球座標系に変換する
+        世界座標系をカメラからのベクトルに変換する
         """
-        d = pos - self.camera_pos
+        return pos - self.camera_pos
 
     def update(self):
         pass
