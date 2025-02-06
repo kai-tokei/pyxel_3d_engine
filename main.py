@@ -22,8 +22,8 @@ class App:
         camera_x: カメラのx座標
         camera_y: カメラのy座標
         camera_z: カメラのz座標
-        camera_h_angle: 水平方向の角度。0でz軸方向を向く。+pi/2で、x軸と同じ向き
-        camera_v_angle: 垂直方向の角度。0でz軸方向を向く。+pi/2で、y軸と同じ向き
+        camera_h_angle: 水平方向の角度(-pi/2 ~ pi/2)。0でz軸方向を向く。+pi/2で、x軸と同じ向き
+        camera_v_angle: 垂直方向の角度(-pi/2 ~ pi/2)。0でz軸方向を向く。+pi/2で、y軸と同じ向き
         aov_h: 水平画角(スクリーンの大きさから計算する)
         aov_w: 垂直画角(スクリーンの大きさから計算する)
         """
@@ -72,6 +72,15 @@ class App:
         u_angle = (mid_w / diff_w) * (math.pi / 2) * velocity
         h_angle = (mid_h / diff_h) * (math.pi / 2) * velocity
         return u_angle, h_angle
+
+    def cal_screen_pos(self) -> tuple[float, float, float]:
+        """
+        スクリーンの座標を計算する
+        """
+        x = self.screen_d * np.sin(self.camera_v_angle)
+        y = self.screen_d * np.sin(self.camera_h_angle)
+        z = self.screen_d * np.cos(self.camera_v_angle)
+        return x, y, z
 
     def update(self):
         pass
