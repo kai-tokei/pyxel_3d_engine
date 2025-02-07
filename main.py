@@ -21,7 +21,7 @@ class Camera:
         self.screen_w = screen_w
         self.screen_h = screen_h
         self.z_prime_handler = 4
-        self.rotate(0, 0)
+        self.rotate(0, 0, 0)
 
     def cal_pos_on_screen(self, pos: np.array) -> tuple[int, int, int] | None:
         """
@@ -59,15 +59,18 @@ class Camera:
         """カメラの位置を変更する"""
         self.camera_pos += np.array([dx, dy, dz])
 
-    def rotate(self, dh: float, dv: float):
+    def rotate(self, dh: float, dv: float, dz: float):
         """カメラの向きを変更する"""
         self.camera_h_angle += dh
         self.camera_v_angle += dv
+        self.camera_z_angle += dz
         # カメラの回転
         self._cos_h = np.cos(self.camera_h_angle)
         self._sin_h = np.sin(self.camera_h_angle)
         self._cos_v = np.cos(self.camera_v_angle)
         self._sin_v = np.sin(self.camera_v_angle)
+        self._cos_z = np.cos(self.camera_z_angle)
+        self._sin_z = np.sin(self.camera_z_angle)
 
 
 class App:
@@ -115,13 +118,13 @@ class App:
         # 角度調整
         v = 360
         if pyxel.btn(pyxel.KEY_LEFT):
-            self.camera.rotate(-np.pi / v, 0)
+            self.camera.rotate(-np.pi / v, 0, 0)
         if pyxel.btn(pyxel.KEY_RIGHT):
-            self.camera.rotate(np.pi / v, 0)
+            self.camera.rotate(np.pi / v, 0, 0)
         if pyxel.btn(pyxel.KEY_UP):
-            self.camera.rotate(0, -np.pi / v)
+            self.camera.rotate(0, -np.pi / v, 0)
         if pyxel.btn(pyxel.KEY_DOWN):
-            self.camera.rotate(0, np.pi / v)
+            self.camera.rotate(0, np.pi / v, 0)
 
         # 奥行スケールを調整
         if pyxel.btn(pyxel.KEY_Z):
