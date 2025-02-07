@@ -8,17 +8,20 @@ class Camera:
         pos: np.array,
         h_angle: float,
         v_angle: float,
+        z_angle: float,
         screen_d: float,
         screen_w: int,
         screen_h: int,
     ):
         self.camera_pos = np.array(pos, dtype=float)
-        self.camera_h_angle = h_angle
-        self.camera_v_angle = v_angle
+        self.camera_h_angle = h_angle  # 水平角度
+        self.camera_v_angle = v_angle  # 垂直角度
+        self.camera_z_angle = z_angle  # z角度
         self.screen_d = screen_d
         self.screen_w = screen_w
         self.screen_h = screen_h
         self.z_prime_handler = 4
+        self.rotate(0, 0)
 
     def cal_pos_on_screen(self, pos: np.array) -> tuple[int, int, int] | None:
         """
@@ -33,17 +36,13 @@ class Camera:
         if d > 60:
             return None
 
-        # カメラの回転
-        cos_h, sin_h = np.cos(self.camera_h_angle), np.sin(self.camera_h_angle)
-        cos_v, sin_v = np.cos(self.camera_v_angle), np.sin(self.camera_v_angle)
-
         # 水平回転（Yaw）
-        x_prime = cos_h * x - sin_h * z
-        z_prime = sin_h * x + cos_h * z
+        x_prime = self._cos_h * x - self._sin_h * z
+        z_prime = self._sin_h * x + self._cos_h * z
 
         # 垂直回転（Pitch）
-        y_prime = cos_v * y - sin_v * z_prime
-        z_prime = sin_v * y + cos_v * z_prime
+        y_prime = self._cos_v * y - self._sin_v * z_prime
+        z_prime = self._sin_v * y + self._cos_v * z_prime
 
         z_prime /= self.z_prime_handler
 
@@ -64,6 +63,11 @@ class Camera:
         """カメラの向きを変更する"""
         self.camera_h_angle += dh
         self.camera_v_angle += dv
+        # カメラの回転
+        self._cos_h = np.cos(self.camera_h_angle)
+        self._sin_h = np.sin(self.camera_h_angle)
+        self._cos_v = np.cos(self.camera_v_angle)
+        self._sin_v = np.sin(self.camera_v_angle)
 
 
 class App:
@@ -73,12 +77,14 @@ class App:
 
         h_angle = 0
         v_angle = 0
+        z_angle = 0
         distance = 10
 
         self.camera = Camera(
             np.array([0, 0, 0]),
             h_angle=h_angle,
             v_angle=v_angle,
+            z_angle=z_angle,
             screen_d=distance,
             screen_w=160,
             screen_h=120,
